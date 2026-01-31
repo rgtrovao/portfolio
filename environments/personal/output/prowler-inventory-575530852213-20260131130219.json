@@ -1,0 +1,133 @@
+[
+    {
+        "AWS_AccountID": "575530852213",
+        "AWS_Region": "us-east-1",
+        "AWS_Partition": "aws",
+        "AWS_Service": "ec2",
+        "AWS_ResourceType": "fleet",
+        "AWS_ResourceID": "fleet-5935112e-a104-e634-04b8-8f220a8d352d",
+        "AWS_ResourceARN": "arn:aws:ec2:us-east-1:575530852213:fleet/fleet-5935112e-a104-e634-04b8-8f220a8d352d",
+        "AWS_Tags": [
+            {
+                "Key": "eks:kubernetes-node-pool-name",
+                "Value": "general-purpose"
+            },
+            {
+                "Key": "kubernetes.io/cluster/rgtrovao-eks-cluster",
+                "Value": "owned"
+            },
+            {
+                "Key": "eks:eks-cluster-name",
+                "Value": "rgtrovao-eks-cluster"
+            },
+            {
+                "Key": "eks:kubernetes-node-class-name",
+                "Value": "default"
+            },
+            {
+                "Key": "aws:ec2:managed-launch",
+                "Value": "eks-auto"
+            }
+        ]
+    },
+    {
+        "AWS_AccountID": "575530852213",
+        "AWS_Region": "us-east-1",
+        "AWS_Partition": "aws",
+        "AWS_Service": "ec2",
+        "AWS_ResourceType": "fleet",
+        "AWS_ResourceID": "fleet-f926388c-d93d-41be-8cb0-8488da1af8ae",
+        "AWS_ResourceARN": "arn:aws:ec2:us-east-1:575530852213:fleet/fleet-f926388c-d93d-41be-8cb0-8488da1af8ae",
+        "AWS_Tags": [
+            {
+                "Key": "eks:kubernetes-node-pool-name",
+                "Value": "general-purpose"
+            },
+            {
+                "Key": "kubernetes.io/cluster/rgtrovao-eks-cluster",
+                "Value": "owned"
+            },
+            {
+                "Key": "eks:eks-cluster-name",
+                "Value": "rgtrovao-eks-cluster"
+            },
+            {
+                "Key": "eks:kubernetes-node-class-name",
+                "Value": "default"
+            },
+            {
+                "Key": "aws:ec2:managed-launch",
+                "Value": "eks-auto"
+            }
+        ]
+    },
+    {
+        "AWS_AccountID": "575530852213",
+        "AWS_Region": "us-east-1",
+        "AWS_Partition": "aws",
+        "AWS_Service": "events",
+        "AWS_ResourceType": "rule",
+        "AWS_ResourceID": "AutoScalingManagedRule",
+        "AWS_ResourceARN": "arn:aws:events:us-east-1:575530852213:rule/AutoScalingManagedRule",
+        "AWS_Tags": []
+    },
+    {
+        "AWS_AccountID": "575530852213",
+        "AWS_Region": "us-east-1",
+        "AWS_Partition": "aws",
+        "AWS_Service": "events",
+        "AWS_ResourceType": "rule",
+        "AWS_ResourceID": "EKSComputeManagedRule",
+        "AWS_ResourceARN": "arn:aws:events:us-east-1:575530852213:rule/EKSComputeManagedRule",
+        "AWS_Tags": []
+    },
+    {
+        "AWS_AccountID": "575530852213",
+        "AWS_Region": "",
+        "AWS_Partition": "aws",
+        "AWS_Service": "iam",
+        "AWS_ResourceType": "user",
+        "AWS_ResourceID": "rgtrovao",
+        "AWS_ResourceARN": "arn:aws:iam::575530852213:user/rgtrovao",
+        "AWS_Tags": null
+    },
+    {
+        "AWS_AccountID": "575530852213",
+        "AWS_Region": "us-east-1",
+        "AWS_Partition": "aws",
+        "AWS_Service": "kms",
+        "AWS_ResourceType": "key",
+        "AWS_ResourceID": "f71b01f6-90f7-4c02-9024-04ca3ff3e737",
+        "AWS_ResourceARN": "arn:aws:kms:us-east-1:575530852213:key/f71b01f6-90f7-4c02-9024-04ca3ff3e737",
+        "AWS_Tags": [
+            {
+                "Key": "Project",
+                "Value": "flights"
+            },
+            {
+                "Key": "terraform-aws-modules",
+                "Value": "eks"
+            }
+        ]
+    },
+    {
+        "AWS_AccountID": "575530852213",
+        "AWS_Region": "",
+        "AWS_Partition": "aws",
+        "AWS_Service": "payments",
+        "AWS_ResourceType": "payment-instrument",
+        "AWS_ResourceID": "5083d05b-253d-41e3-bd65-7e54a3998dba",
+        "AWS_ResourceARN": "arn:aws:payments::575530852213:payment-instrument:5083d05b-253d-41e3-bd65-7e54a3998dba",
+        "AWS_Tags": []
+    },
+    {
+        "AWS_AccountID": "575530852213",
+        "AWS_Region": "us-east-1",
+        "AWS_Partition": "aws",
+        "AWS_Service": "s3",
+        "AWS_ResourceType": "bucket",
+        "AWS_ResourceID": "rgtrovao-terraform-bucket",
+        "AWS_ResourceARN": "arn:aws:s3:us-east-1::rgtrovao-terraform-bucket",
+        "AWS_Tags": []
+    }
+]
