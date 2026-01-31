@@ -22,3 +22,8 @@ terraform apply
 - NAT Gateway tem custo fixo/hora; se não precisar de saída para internet na subnet privada (ou puder usar endpoints), considere evoluções futuras.
 - Para habilitar GitHub Actions (OIDC) -> ECR, defina `github_org` e `github_repo` (e opcionalmente ajuste `github_allowed_refs`).
 
+## Variáveis obrigatórias já preenchidas
+Este diretório contém `terraform.tfvars` com:
+- `github_org = "rgtrovao"`
+- `github_repo = "portfolio"`
+
