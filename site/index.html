@@ -4,7 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>TrueCloud | AWS EKS Portfolio</title>
-    <meta name="description" content="Personal portfolio: VPC + EKS + ECR + GitHub OIDC + ALB + ACM + Route53, provisioned with Terraform." />
+    <meta
+      name="description"
+      content="Portfolio project: Terraform on AWS (VPC + EKS + ECR) with Kubernetes, Docker, and GitHub Actions CI/CD."
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -14,17 +17,27 @@
           <div class="brand__mark">TC</div>
           <div class="brand__text">
             <div class="brand__name">TrueCloud</div>
-            <div class="brand__tag">AWS • Terraform • Kubernetes</div>
+            <div class="brand__tag">AWS • Terraform • EKS • Kubernetes • CI/CD</div>
           </div>
         </div>
         <nav class="nav">
           <a href="#overview">Overview</a>
+          <a href="#highlights">Highlights</a>
           <a href="#architecture">Architecture</a>
           <a href="#components">Components</a>
           <a href="#pipeline">CI/CD</a>
+          <a href="#howto">How to run</a>
           <a href="#cost">Cost</a>
           <a href="#security">Security</a>
         </nav>
+        <div class="nav-cta">
+          <a class="btn btn--small btn--ghost" href="https://github.com/rgtrovao/portfolio" target="_blank" rel="noreferrer">
+            GitHub
+          </a>
+          <a class="btn btn--small btn--primary" href="https://www.linkedin.com/in/rgtrovao" target="_blank" rel="noreferrer">
+            LinkedIn
+          </a>
+        </div>
       </div>
     </header>
 
@@ -32,10 +45,10 @@
       <section class="hero" id="overview">
         <div class="container hero__inner">
           <div class="hero__text">
-            <h1>End-to-end AWS EKS infrastructure, built with Terraform</h1>
+            <h1>End-to-end AWS EKS platform, built with Terraform</h1>
             <p class="lead">
-              This page is served by <strong>nginx</strong> running on <strong>EKS</strong> (2 pods) behind an
-              <strong>internet-facing ALB</strong> with <strong>HTTP → HTTPS redirect</strong> and an ACM certificate.
+              This page is served by a <strong>Docker</strong> image running on <strong>EKS</strong> (2 pods) behind an
+              <strong>internet-facing ALB</strong> with <strong>HTTP → HTTPS redirect</strong> and TLS termination.
             </p>
             <div class="pill-row">
               <span class="pill">Region: us-east-1</span>
@@ -44,9 +57,22 @@
               <span class="pill">Pods: 2</span>
               <span class="pill">Host: www.truecloud.com.br</span>
             </div>
+            <div class="chip-row" aria-label="Technology stack">
+              <span class="chip">Terraform</span>
+              <span class="chip">AWS</span>
+              <span class="chip">VPC</span>
+              <span class="chip">EKS</span>
+              <span class="chip">Kubernetes</span>
+              <span class="chip">Docker</span>
+              <span class="chip">ECR</span>
+              <span class="chip">GitHub Actions</span>
+              <span class="chip">OIDC</span>
+              <span class="chip">IRSA</span>
+              <span class="chip">ALB Ingress</span>
+            </div>
             <div class="cta-row">
               <a class="btn btn--primary" href="#architecture">View architecture</a>
-              <a class="btn btn--ghost" href="#pipeline">See deploy flow</a>
+              <a class="btn btn--ghost" href="#pipeline">See CI/CD flow</a>
             </div>
           </div>
 
@@ -56,13 +82,53 @@
               <li>VPC with 6 subnets (2 public, 2 private, 2 db)</li>
               <li>IGW + public routing, 1 NAT Gateway for private egress</li>
               <li>EKS 1.33 + managed node group (2× t3.small, SPOT)</li>
-              <li>ECR repo for app images + lifecycle policy</li>
+              <li>ECR repo for app images (created manually to preserve history)</li>
               <li>GitHub Actions OIDC role for ECR push</li>
               <li>AWS Load Balancer Controller installed by Terraform (Helm + IRSA)</li>
               <li>ALB Ingress with TLS (ACM) + redirect</li>
             </ul>
             <div class="muted small">
-              Sensitive values are masked (account IDs, ARNs, resource IDs).
+              No sensitive identifiers are shown (no account IDs, ARNs, resource IDs, or outputs).
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="highlights">
+        <div class="container">
+          <h2>Highlights</h2>
+          <p class="muted">
+            A curated set of decisions and practices demonstrated by this project. This is the kind of work I enjoy: IaC,
+            platform engineering, and pragmatic automation.
+          </p>
+
+          <div class="grid">
+            <div class="tile">
+              <div class="tile-title">Infrastructure as Code</div>
+              <div class="tile-body">
+                Modular Terraform layout with environment composition, clear inputs/outputs, and reproducible provisioning.
+              </div>
+            </div>
+            <div class="tile">
+              <div class="tile-title">Security by design</div>
+              <div class="tile-body">
+                GitHub Actions uses OIDC to assume a dedicated IAM role (no long-lived AWS keys). EKS workloads run in private
+                subnets behind an ALB.
+              </div>
+            </div>
+            <div class="tile">
+              <div class="tile-title">Operational workflow</div>
+              <div class="tile-body">
+                One <code>terraform apply</code> provisions infra and installs the AWS Load Balancer Controller; one
+                <code>kubectl apply</code> deploys the app and Ingress.
+              </div>
+            </div>
+            <div class="tile">
+              <div class="tile-title">Versioned images & rollback</div>
+              <div class="tile-body">
+                CI pushes both <code>:latest</code> and <code>:&lt;commit-sha&gt;</code> tags to ECR. Rollbacks can pin a known
+                good SHA tag.
+              </div>
             </div>
           </div>
         </div>
@@ -79,52 +145,75 @@
             <div class="panel-header">
               <div>
                 <div class="panel-title">Solution diagram</div>
-                <div class="panel-subtitle">Rendered with Mermaid in the browser</div>
+                <div class="panel-subtitle">Offline SVG (no external dependencies)</div>
               </div>
-              <button class="btn btn--small btn--ghost" id="copyDiagram">Copy diagram</button>
+              <button class="btn btn--small btn--ghost" data-copy="archSummary">Copy summary</button>
             </div>
 
-            <div class="mermaid-wrap">
-              <div class="mermaid" id="diagram">
-flowchart LR
-  User((User)) -->|"HTTPS 443"| ALB["ALB (Ingress)"]
-  User -->|"HTTP 80"| ALB
-  ALB -->|"HTTP -> HTTPS redirect"| ALB
-  ALB --> Svc["K8s Service (ClusterIP)"]
-  Svc --> Pod1["nginx pod #1"]
-  Svc --> Pod2["nginx pod #2"]
+            <div class="diagram-wrap" role="img" aria-label="Architecture diagram">
+              <svg viewBox="0 0 1200 520" class="diagram" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L10,3 L0,6 Z" class="diagram-arrowhead" />
+                  </marker>
+                </defs>
 
-  subgraph ciCd["CI/CD"]
-    GHA["GitHub Actions (OIDC)"] -->|"AssumeRoleWithWebIdentity"| IAMRole["IAM Role (masked)"]
-    IAMRole -->|"push"| ECR["ECR Repo projeto-eks/app"]
-  end
+                <rect x="30" y="50" width="260" height="150" rx="18" class="diagram-box" />
+                <text x="60" y="88" class="diagram-title">CI/CD</text>
+                <text x="60" y="118" class="diagram-text">GitHub Actions</text>
+                <text x="60" y="144" class="diagram-text">OIDC → AssumeRole</text>
+                <text x="60" y="170" class="diagram-text">Build & push image</text>
 
-  ECR -->|"pull"| Nodes["EKS Nodes (2× t3.small)"]
-  Nodes --> Pod1
-  Nodes --> Pod2
+                <rect x="330" y="80" width="230" height="120" rx="18" class="diagram-box" />
+                <text x="360" y="118" class="diagram-title">IAM</text>
+                <text x="360" y="148" class="diagram-text">Dedicated role</text>
+                <text x="360" y="174" class="diagram-text">(no static keys)</text>
 
-  subgraph awsNetwork["AWS Network (VPC 10.0.0.0/16)"]
-    IGW["Internet Gateway"] --> PublicRT["Public route table"]
-    PublicRT --> PublicA["Public subnet (AZ-a)"]
-    PublicRT --> PublicB["Public subnet (AZ-b)"]
-    PublicA --> NAT["NAT Gateway (single)"]
-    PrivateRT["Private route table"] --> PrivateA["Private subnet (AZ-a)"]
-    PrivateRT --> PrivateB["Private subnet (AZ-b)"]
-    PrivateA --> NAT
-    PrivateB --> NAT
-    DB["DB subnets (no internet route)"]:::db
-  end
+                <rect x="610" y="80" width="250" height="120" rx="18" class="diagram-box" />
+                <text x="640" y="118" class="diagram-title">ECR</text>
+                <text x="640" y="148" class="diagram-text">Repo: projeto-eks/app</text>
+                <text x="640" y="174" class="diagram-text">Tags: latest + sha</text>
 
-  ALB --> PublicA
-  ALB --> PublicB
-  Pod1 --> PrivateA
-  Pod2 --> PrivateB
+                <line x1="290" y1="125" x2="330" y2="125" class="diagram-line" marker-end="url(#arrow)" />
+                <line x1="560" y1="140" x2="610" y2="140" class="diagram-line" marker-end="url(#arrow)" />
 
-  ACM["ACM Cert (*.truecloud.com.br)"] -->|"TLS"| ALB
-  R53["Route53 record www.truecloud.com.br"] --> ALB
+                <rect x="30" y="240" width="1135" height="250" rx="22" class="diagram-frame" />
+                <text x="60" y="275" class="diagram-title">AWS VPC</text>
+                <text x="60" y="300" class="diagram-subtle">2 AZs • Public + Private + Isolated DB • Single NAT Gateway</text>
 
-  classDef db stroke-dasharray: 5 5;
-              </div>
+                <rect x="70" y="325" width="310" height="135" rx="18" class="diagram-box" />
+                <text x="95" y="362" class="diagram-title">Public subnets</text>
+                <text x="95" y="392" class="diagram-text">ALB (Ingress)</text>
+                <text x="95" y="418" class="diagram-text">IGW route</text>
+
+                <rect x="420" y="325" width="380" height="135" rx="18" class="diagram-box" />
+                <text x="445" y="362" class="diagram-title">Private subnets</text>
+                <text x="445" y="392" class="diagram-text">EKS nodes (2× t3.small, SPOT)</text>
+                <text x="445" y="418" class="diagram-text">Workloads (2 nginx pods)</text>
+
+                <rect x="840" y="325" width="285" height="135" rx="18" class="diagram-box dashed" />
+                <text x="865" y="362" class="diagram-title">DB subnets (isolated)</text>
+                <text x="865" y="392" class="diagram-text">No internet route</text>
+                <text x="865" y="418" class="diagram-text">Reserved for data</text>
+
+                <rect x="910" y="40" width="255" height="170" rx="18" class="diagram-box" />
+                <text x="940" y="78" class="diagram-title">Web entrypoint</text>
+                <text x="940" y="108" class="diagram-text">Route53: www.truecloud.com.br</text>
+                <text x="940" y="134" class="diagram-text">ACM certificate (TLS)</text>
+                <text x="940" y="160" class="diagram-text">HTTP → HTTPS redirect</text>
+
+                <line x1="860" y1="140" x2="910" y2="140" class="diagram-line" marker-end="url(#arrow)" />
+                <line x1="1040" y1="210" x2="225" y2="325" class="diagram-line" marker-end="url(#arrow)" />
+                <line x1="735" y1="200" x2="610" y2="325" class="diagram-line" marker-end="url(#arrow)" />
+              </svg>
+            </div>
+
+            <div class="panel-footer">
+              <pre class="copy-block" id="archSummary"><code>Architecture summary (high level)
+- Terraform provisions VPC + EKS and installs AWS Load Balancer Controller (Helm + IRSA).
+- GitHub Actions uses OIDC to assume an IAM role and push versioned Docker images to ECR.
+- EKS runs 2 nginx pods behind an internet-facing ALB Ingress with HTTP→HTTPS redirect and TLS.
+- Workloads run in private subnets; DB subnets are isolated (no internet route).</code></pre>
             </div>
           </div>
         </div>
@@ -158,12 +247,24 @@ flowchart LR
                 AWS Load Balancer Controller (installed by Terraform via Helm + IRSA) creates an ALB with listeners 80/443, redirect and ACM TLS termination.
               </div>
             </div>
+            <div class="tile">
+              <div class="tile-title">ECR</div>
+              <div class="tile-body">
+                Repository created manually to preserve image history. Lifecycle rules are configured in the AWS Console to control retention/cost.
+              </div>
+            </div>
+            <div class="tile">
+              <div class="tile-title">Docker</div>
+              <div class="tile-body">
+                Static website bundled into an nginx image via <code>Dockerfile</code> and deployed as a Kubernetes Deployment.
+              </div>
+            </div>
           </div>
 
           <div class="callout">
-            <div class="callout-title">Masked identifiers</div>
+            <div class="callout-title">No sensitive identifiers</div>
             <div class="callout-body">
-              Account: <code>5755••••2213</code> • ACM ARN: <code>arn:aws:acm:us-east-1:5755••••2213:certificate/66c2…a28d</code>
+              This page intentionally omits account IDs, ARNs, resource IDs, and Terraform outputs.
             </div>
           </div>
         </div>
@@ -183,8 +284,38 @@ flowchart LR
             <code>kubectl apply -f k8s/apps/portfolio-nginx/</code> once (app + ingress).
           </p>
           <p class="muted">
-            Repository: <a href="https://github.com/rgtrovao/portfolio" target="_blank" rel="noreferrer">rgtrovao/portfolio</a>
+            Repository: <a href="https://github.com/rgtrovao/portfolio" target="_blank" rel="noreferrer">rgtrovao/portfolio</a> •
+            LinkedIn: <a href="https://www.linkedin.com/in/rgtrovao" target="_blank" rel="noreferrer">/in/rgtrovao</a>
           </p>
+        </div>
+      </section>
+
+      <section class="section" id="howto">
+        <div class="container">
+          <h2>How to run (high level)</h2>
+          <p class="muted">
+            The exact commands may vary by environment, but the intent is intentionally simple: provision infra once, apply manifests once.
+          </p>
+
+          <div class="grid">
+            <div class="tile">
+              <div class="tile-title">Provision infrastructure</div>
+              <div class="tile-body">
+                <p class="muted small">Terraform provisions VPC/EKS and installs the AWS Load Balancer Controller.</p>
+                <pre class="copy-block"><code>cd environments/personal
+terraform init -upgrade
+terraform apply</code></pre>
+              </div>
+            </div>
+            <div class="tile">
+              <div class="tile-title">Deploy the app</div>
+              <div class="tile-body">
+                <p class="muted small">Configure kubeconfig, then apply the Kubernetes manifests.</p>
+                <pre class="copy-block"><code>aws eks update-kubeconfig --region us-east-1 --name projeto-eks-personal
+kubectl apply -f k8s/apps/portfolio-nginx/</code></pre>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -205,9 +336,9 @@ flowchart LR
               </div>
             </div>
             <div class="tile">
-              <div class="tile-title">Lifecycle policy in ECR</div>
+              <div class="tile-title">ECR retention</div>
               <div class="tile-body">
-                Automatically expiring older images helps prevent ECR storage growth over time.
+                Lifecycle rules (configured manually in the AWS Console) help prevent ECR storage growth over time.
               </div>
             </div>
           </div>
@@ -233,11 +364,14 @@ flowchart LR
     <footer class="footer">
       <div class="container footer__inner">
         <div class="small muted">© TrueCloud • Portfolio running on EKS</div>
-        <div class="small muted">Built with Terraform + Kubernetes</div>
+        <div class="small muted">
+          Built with Terraform + Kubernetes •
+          <a href="https://github.com/rgtrovao/portfolio" target="_blank" rel="noreferrer">GitHub</a> •
+          <a href="https://www.linkedin.com/in/rgtrovao" target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
       </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

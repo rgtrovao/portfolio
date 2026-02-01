@@ -55,6 +55,7 @@ a:hover { text-decoration: underline; }
 .nav { display: flex; gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
 .nav a { font-size: 13px; color: var(--muted); }
 .nav a:hover { color: var(--text); text-decoration: none; }
+.nav-cta { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 
 .hero { padding: 64px 0 18px; }
 .hero__inner { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; align-items: start; }
@@ -69,6 +70,15 @@ h2 { margin: 0 0 14px; font-size: 28px; letter-spacing: -0.01em; }
   border-radius: 999px;
   font-size: 12px;
   color: var(--muted);
+}
+.chip-row { display: flex; flex-wrap: wrap; gap: 10px; margin: -10px 0 22px; }
+.chip {
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 999px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.78);
 }
 .cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .btn {
@@ -130,8 +140,36 @@ h2 { margin: 0 0 14px; font-size: 28px; letter-spacing: -0.01em; }
 }
 .panel-title { font-weight: 800; }
 .panel-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.mermaid-wrap { padding: 14px; background: rgba(0, 0, 0, 0.16); }
-.mermaid { overflow-x: auto; }
+.diagram-wrap { padding: 14px; background: rgba(0, 0, 0, 0.16); }
+.diagram { width: 100%; height: auto; display: block; overflow: hidden; }
+.panel-footer { padding: 12px 14px 14px; border-top: 1px solid var(--border); background: rgba(255, 255, 255, 0.02); }
+
+.copy-block {
+  margin: 0;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.18);
+  overflow: auto;
+}
+.copy-block code {
+  display: block;
+  white-space: pre;
+  line-height: 1.55;
+  font-size: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.diagram-box { fill: rgba(255, 255, 255, 0.04); stroke: rgba(255, 255, 255, 0.14); stroke-width: 1.2; }
+.diagram-frame { fill: rgba(255, 255, 255, 0.02); stroke: rgba(255, 255, 255, 0.12); stroke-width: 1.2; }
+.diagram-title { fill: rgba(255, 255, 255, 0.90); font: 700 16px var(--sans); letter-spacing: -0.01em; }
+.diagram-text { fill: rgba(255, 255, 255, 0.70); font: 500 14px var(--sans); }
+.diagram-subtle { fill: rgba(255, 255, 255, 0.60); font: 500 13px var(--sans); }
+.diagram-line { stroke: rgba(124, 92, 255, 0.55); stroke-width: 2; }
+.diagram-arrowhead { fill: rgba(124, 92, 255, 0.75); }
+.diagram-box.dashed { stroke-dasharray: 6 6; }
 
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .tile {
@@ -169,5 +207,6 @@ code { font-family: var(--mono); font-size: 12px; padding: 2px 6px; border-radiu
   .brand { min-width: unset; }
   .grid { grid-template-columns: 1fr; }
   .nav { display: none; }
+  .nav-cta { display: none; }
 }
 
