@@ -62,19 +62,19 @@ variable "node_capacity_type" {
 variable "node_desired_size" {
   description = "Tamanho desejado do node group."
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "node_min_size" {
   description = "Tamanho mínimo do node group."
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "node_max_size" {
   description = "Tamanho máximo do node group."
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "tags" {

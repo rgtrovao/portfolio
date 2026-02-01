@@ -92,3 +92,13 @@ output "github_actions_ecr_role_arn" {
   value       = module.github_oidc_ecr.role_arn
 }
 
+output "aws_load_balancer_controller_irsa_role_arn" {
+  description = "ARN da role IRSA do AWS Load Balancer Controller."
+  value       = module.irsa_aws_load_balancer_controller.iam_role_arn
+}
+
+output "aws_load_balancer_controller_oidc_provider_arn" {
+  description = "ARN do IAM OIDC provider do cluster EKS (para IRSA)."
+  value       = module.irsa_aws_load_balancer_controller.oidc_provider_arn
+}
+

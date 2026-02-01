@@ -56,3 +56,47 @@ module "github_oidc_ecr" {
   ecr_repository_arns = [module.ecr.repository_arn]
 }
 
+module "irsa_aws_load_balancer_controller" {
+  source = "../../modules/irsa_aws_load_balancer_controller"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  cluster_oidc_issuer_url = module.eks.cluster_oidc_issuer_url
+  policy_json             = file("${path.root}/../../k8s/controllers/aws-load-balancer-controller/iam-policy.json")
+
+  namespace           = "kube-system"
+  serviceaccount_name = "aws-load-balancer-controller"
+}
+
+resource "helm_release" "aws_load_balancer_controller" {
+  name       = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+  version    = var.aws_load_balancer_controller_chart_version
+
+  namespace        = "kube-system"
+  create_namespace = false
+
+  values = [
+    yamlencode({
+      clusterName  = module.eks.cluster_name
+      region       = var.aws_region
+      vpcId        = module.vpc.vpc_id
+      replicaCount = var.aws_load_balancer_controller_replica_count
+
+      serviceAccount = {
+        create = true
+        name   = "aws-load-balancer-controller"
+        annotations = {
+          "eks.amazonaws.com/role-arn" = module.irsa_aws_load_balancer_controller.iam_role_arn
+        }
+      }
+    })
+  ]
+
+  depends_on = [
+    module.irsa_aws_load_balancer_controller,
+  ]
+}
+

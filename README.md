@@ -12,10 +12,11 @@ Projeto pessoal em Terraform para provisionar na AWS (`us-east-1`) uma **VPC** c
   - 1× NAT Gateway (único) + route table privada com rota `0.0.0.0/0 -> NAT`
 - **EKS**
   - 1× cluster EKS (Kubernetes `1.33`)
-  - 1× managed node group: `SPOT`, `t3.micro`, 2 nós
+  - 1× managed node group: `SPOT`, `t3.micro`, 3 nós
 - **ECR + IAM**
   - 1× repositório ECR
   - 1× role IAM para GitHub Actions (OIDC) fazer push no ECR
+  - AWS Load Balancer Controller instalado automaticamente no cluster (Helm via Terraform)
 
 ## Arquitetura (alto nível)
 ```mermaid
@@ -42,7 +43,7 @@ flowchart LR
   EKS --- PublicB
   EKS --- PrivateA
   EKS --- PrivateB
-  NodeGroup[ManagedNodeGroup_SPOT_t3micro_x2] --- PrivateA
+  NodeGroup[ManagedNodeGroup_SPOT_t3micro_x3] --- PrivateA
   NodeGroup --- PrivateB
 ```
 
@@ -69,6 +70,12 @@ cd environments/personal
 terraform init
 terraform plan
 terraform apply
+```
+
+Depois do `terraform apply`, publique o portfolio no cluster:
+```bash
+aws eks update-kubeconfig --region us-east-1 --name projeto-eks-personal
+kubectl apply -f k8s/apps/portfolio-nginx/
 ```
 
 Para destruir:

@@ -4,10 +4,10 @@ Este diretório compõe o ambiente **personal** usando os módulos em `../../mod
 
 ## Arquivos
 - `backend.tf`: backend remoto S3 (`rgtrovao-terraform-bucket`).
-- `providers.tf`: provider AWS e tags padrão.
+- `providers.tf`: providers AWS/Kubernetes/Helm (Kubernetes/Helm apontam para o cluster EKS).
 - `versions.tf`: versões mínimas do Terraform/provider.
 - `variables.tf`: parâmetros do ambiente (CIDRs, AZs, cluster, node group).
-- `main.tf`: instancia `module.vpc`, `module.eks`, `module.ecr` e `module.github_oidc_ecr`.
+- `main.tf`: instancia `module.vpc`, `module.eks`, `module.ecr`, `module.github_oidc_ecr`, IRSA do controller e instala o AWS Load Balancer Controller via Helm.
 - `outputs.tf`: outputs consolidados (rede + EKS + ECR + GitHub OIDC).
 
 ## Execução (manual)

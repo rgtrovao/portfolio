@@ -28,6 +28,11 @@ output "cluster_iam_role_arn" {
   value       = aws_iam_role.eks_cluster.arn
 }
 
+output "cluster_oidc_issuer_url" {
+  description = "OIDC issuer URL do cluster (necessário para IRSA)."
+  value       = aws_eks_cluster.this.identity[0].oidc[0].issuer
+}
+
 output "node_group_name" {
   description = "Nome do managed node group."
   value       = aws_eks_node_group.this.node_group_name

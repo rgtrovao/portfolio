@@ -1,0 +1,18 @@
+# Reference values file (manual Helm install only).
+# This repo installs the controller via Terraform, so you typically do not use this file.
+#
+clusterName: "__CLUSTER_NAME__"
+region: "__AWS_REGION__"
+vpcId: "__VPC_ID__"
+
+replicaCount: 2
+
+serviceAccount:
+  # If installing manually, set `create: true` and add the IRSA annotation.
+  create: false
+  name: aws-load-balancer-controller
+
+# Optional: enable if you want extra verbosity while troubleshooting
+# extraArgs:
+#   - --log-level=debug
+

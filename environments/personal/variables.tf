@@ -79,17 +79,29 @@ variable "node_capacity_type" {
 variable "node_desired_size" {
   description = "Tamanho desejado do node group."
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "node_min_size" {
   description = "Tamanho mínimo do node group."
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "node_max_size" {
   description = "Tamanho máximo do node group."
+  type        = number
+  default     = 3
+}
+
+variable "aws_load_balancer_controller_chart_version" {
+  description = "Versão do chart Helm do AWS Load Balancer Controller (repo aws/eks-charts)."
+  type        = string
+  default     = "3.0.0"
+}
+
+variable "aws_load_balancer_controller_replica_count" {
+  description = "Número de réplicas do AWS Load Balancer Controller."
   type        = number
   default     = 2
 }

@@ -1,0 +1,451 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: portfolio-site
+  namespace: portfolio
+data:
+  index.html: |-
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>TrueCloud | AWS EKS Portfolio</title>
+        <meta name="description" content="Personal portfolio: VPC + EKS + ECR + GitHub OIDC + ALB + ACM + Route53, provisioned with Terraform." />
+        <link rel="stylesheet" href="styles.css" />
+      </head>
+      <body>
+        <header class="header">
+          <div class="container header__inner">
+            <div class="brand">
+              <div class="brand__mark">TC</div>
+              <div class="brand__text">
+                <div class="brand__name">TrueCloud</div>
+                <div class="brand__tag">AWS • Terraform • Kubernetes</div>
+              </div>
+            </div>
+            <nav class="nav">
+              <a href="#overview">Overview</a>
+              <a href="#architecture">Architecture</a>
+              <a href="#components">Components</a>
+              <a href="#pipeline">CI/CD</a>
+              <a href="#cost">Cost</a>
+              <a href="#security">Security</a>
+            </nav>
+          </div>
+        </header>
+
+        <main>
+          <section class="hero" id="overview">
+            <div class="container hero__inner">
+              <div class="hero__text">
+                <h1>End-to-end AWS EKS infrastructure, built with Terraform</h1>
+                <p class="lead">
+                  This page is served by <strong>nginx</strong> running on <strong>EKS</strong> (2 pods) behind an
+                  <strong>internet-facing ALB</strong> with <strong>HTTP → HTTPS redirect</strong> and an ACM certificate.
+                </p>
+                <div class="pill-row">
+                  <span class="pill">Region: us-east-1</span>
+                  <span class="pill">Kubernetes: 1.33</span>
+                  <span class="pill">Nodes: 3 (t3.micro • SPOT)</span>
+                  <span class="pill">Pods: 2</span>
+                  <span class="pill">Host: www.truecloud.com.br</span>
+                </div>
+                <div class="cta-row">
+                  <a class="btn btn--primary" href="#architecture">View architecture</a>
+                  <a class="btn btn--ghost" href="#pipeline">See deploy flow</a>
+                </div>
+              </div>
+
+              <div class="hero__card">
+                <div class="card-title">What’s provisioned</div>
+                <ul class="checklist">
+                  <li>VPC with 6 subnets (2 public, 2 private, 2 db)</li>
+                  <li>IGW + public routing, 1 NAT Gateway for private egress</li>
+                  <li>EKS 1.33 + managed node group (3× t3.micro, SPOT)</li>
+                  <li>ECR repo for app images + lifecycle policy</li>
+                  <li>GitHub Actions OIDC role for ECR push</li>
+                  <li>AWS Load Balancer Controller installed by Terraform (Helm + IRSA)</li>
+                  <li>ALB Ingress with TLS (ACM) + redirect</li>
+                </ul>
+                <div class="muted small">
+                  Sensitive values are masked (account IDs, ARNs, resource IDs).
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="architecture">
+            <div class="container">
+              <h2>Architecture</h2>
+              <p class="muted">
+                The diagram below describes the complete solution: network, EKS, container registry, CI/CD and the web entrypoint.
+              </p>
+
+              <div class="panel">
+                <div class="panel-header">
+                  <div>
+                    <div class="panel-title">Solution diagram</div>
+                    <div class="panel-subtitle">Rendered with Mermaid in the browser</div>
+                  </div>
+                  <button class="btn btn--small btn--ghost" id="copyDiagram">Copy diagram</button>
+                </div>
+
+                <div class="mermaid-wrap">
+                  <div class="mermaid" id="diagram">
+    flowchart LR
+      User((User)) -->|"HTTPS 443"| ALB["ALB (Ingress)"]
+      User -->|"HTTP 80"| ALB
+      ALB -->|"HTTP -> HTTPS redirect"| ALB
+      ALB --> Svc["K8s Service (ClusterIP)"]
+      Svc --> Pod1["nginx pod #1"]
+      Svc --> Pod2["nginx pod #2"]
+
+      subgraph ciCd["CI/CD"]
+        GHA["GitHub Actions (OIDC)"] -->|"AssumeRoleWithWebIdentity"| IAMRole["IAM Role (masked)"]
+        IAMRole -->|"push"| ECR["ECR Repo projeto-eks/app"]
+      end
+
+      ECR -->|"pull"| Nodes["EKS Nodes (3× t3.micro)"]
+      Nodes --> Pod1
+      Nodes --> Pod2
+
+      subgraph awsNetwork["AWS Network (VPC 10.0.0.0/16)"]
+        IGW["Internet Gateway"] --> PublicRT["Public route table"]
+        PublicRT --> PublicA["Public subnet (AZ-a)"]
+        PublicRT --> PublicB["Public subnet (AZ-b)"]
+        PublicA --> NAT["NAT Gateway (single)"]
+        PrivateRT["Private route table"] --> PrivateA["Private subnet (AZ-a)"]
+        PrivateRT --> PrivateB["Private subnet (AZ-b)"]
+        PrivateA --> NAT
+        PrivateB --> NAT
+        DB["DB subnets (no internet route)"]:::db
+      end
+
+      ALB --> PublicA
+      ALB --> PublicB
+      Pod1 --> PrivateA
+      Pod2 --> PrivateB
+
+      ACM["ACM Cert (*.truecloud.com.br)"] -->|"TLS"| ALB
+      R53["Route53 record www.truecloud.com.br"] --> ALB
+
+      classDef db stroke-dasharray: 5 5;
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="components">
+            <div class="container">
+              <h2>Components</h2>
+              <div class="grid">
+                <div class="tile">
+                  <div class="tile-title">Terraform (IaC)</div>
+                  <div class="tile-body">
+                    Modular Terraform structure provisioning VPC, EKS, ECR and GitHub OIDC integration.
+                  </div>
+                </div>
+                <div class="tile">
+                  <div class="tile-title">VPC</div>
+                  <div class="tile-body">
+                    2 public subnets, 2 private subnets, 2 isolated db subnets across 2 AZs, with a single NAT Gateway (cost-optimized).
+                  </div>
+                </div>
+                <div class="tile">
+                  <div class="tile-title">EKS</div>
+                  <div class="tile-body">
+                    Kubernetes 1.33, managed node group (3 nodes, t3.micro • SPOT), workloads scheduled on private subnets.
+                  </div>
+                </div>
+                <div class="tile">
+                  <div class="tile-title">Ingress (ALB)</div>
+                  <div class="tile-body">
+                    AWS Load Balancer Controller (installed by Terraform via Helm + IRSA) creates an ALB with listeners 80/443, redirect and ACM TLS termination.
+                  </div>
+                </div>
+              </div>
+
+              <div class="callout">
+                <div class="callout-title">Masked identifiers</div>
+                <div class="callout-body">
+                  Account: <code>5755••••2213</code> • ACM ARN: <code>arn:aws:acm:us-east-1:5755••••2213:certificate/66c2…a28d</code>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="pipeline">
+            <div class="container">
+              <h2>CI/CD (GitHub Actions → ECR → EKS)</h2>
+              <ol class="steps">
+                <li>Developer pushes to <code>main</code></li>
+                <li>GitHub Actions uses OIDC to assume an IAM role (no long-lived AWS keys)</li>
+                <li>Pipeline builds the container image and pushes to ECR</li>
+                <li>EKS nodes pull the image from ECR and run the updated pods</li>
+              </ol>
+              <p class="muted">
+                Provisioning workflow: run <code>terraform apply</code> once (infra + controller), then run
+                <code>kubectl apply -f k8s/apps/portfolio-nginx/</code> once (app + ingress).
+              </p>
+              <p class="muted">
+                Repository: <a href="https://github.com/rgtrovao/portfolio" target="_blank" rel="noreferrer">rgtrovao/portfolio</a>
+              </p>
+            </div>
+          </section>
+
+          <section class="section" id="cost">
+            <div class="container">
+              <h2>Cost notes</h2>
+              <div class="grid">
+                <div class="tile">
+                  <div class="tile-title">Single NAT Gateway</div>
+                  <div class="tile-body">
+                    NAT Gateway is one of the most expensive building blocks in small labs. This project uses a single NAT to reduce cost.
+                  </div>
+                </div>
+                <div class="tile">
+                  <div class="tile-title">EKS control plane</div>
+                  <div class="tile-body">
+                    EKS has a fixed hourly cost for the control plane. This is acceptable for a portfolio, but not “free”.
+                  </div>
+                </div>
+                <div class="tile">
+                  <div class="tile-title">Lifecycle policy in ECR</div>
+                  <div class="tile-body">
+                    Automatically expiring older images helps prevent ECR storage growth over time.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="security">
+            <div class="container">
+              <h2>Security notes</h2>
+              <ul class="bullets">
+                <li>OIDC trust policy restricted to <code>rgtrovao/portfolio</code> and <code>refs/heads/main</code></li>
+                <li>HTTPS enabled with ACM certificate and HTTP→HTTPS redirect</li>
+                <li>DB subnets are isolated (no default route to internet)</li>
+                <li>Workloads run in private subnets</li>
+              </ul>
+              <p class="muted">
+                Tip: restrict the EKS public endpoint CIDRs after bootstrap to reduce exposure.
+              </p>
+            </div>
+          </section>
+        </main>
+
+        <footer class="footer">
+          <div class="container footer__inner">
+            <div class="small muted">© TrueCloud • Portfolio running on EKS</div>
+            <div class="small muted">Built with Terraform + Kubernetes</div>
+          </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+        <script src="app.js"></script>
+      </body>
+    </html>
+
+  styles.css: |-
+    :root {
+      --bg: #0b1020;
+      --bg2: #0f1631;
+      --card: rgba(255, 255, 255, 0.06);
+      --card2: rgba(255, 255, 255, 0.08);
+      --text: rgba(255, 255, 255, 0.92);
+      --muted: rgba(255, 255, 255, 0.68);
+      --border: rgba(255, 255, 255, 0.10);
+      --accent: #7c5cff;
+      --accent2: #22d3ee;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 20% 10%, rgba(124, 92, 255, 0.22), transparent 50%),
+        radial-gradient(900px 700px at 80% 30%, rgba(34, 211, 238, 0.18), transparent 50%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(11, 16, 32, 0.55);
+      border-bottom: 1px solid var(--border);
+    }
+    .header__inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 16px; }
+
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 240px; }
+    .brand__mark {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: grid; place-items: center;
+      font-weight: 800;
+      color: rgba(11, 16, 32, 0.9);
+    }
+    .brand__name { font-weight: 800; letter-spacing: 0.3px; }
+    .brand__tag { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .nav { display: flex; gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
+    .nav a { font-size: 13px; color: var(--muted); }
+    .nav a:hover { color: var(--text); text-decoration: none; }
+
+    .hero { padding: 64px 0 18px; }
+    .hero__inner { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; align-items: start; }
+    h1 { margin: 0 0 12px; font-size: clamp(28px, 4vw, 44px); line-height: 1.05; letter-spacing: -0.02em; }
+    h2 { margin: 0 0 14px; font-size: 28px; letter-spacing: -0.01em; }
+    .lead { color: var(--muted); font-size: 16px; line-height: 1.55; margin: 0 0 18px; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 22px; }
+    .pill {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-weight: 650;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .btn:hover { background: rgba(255, 255, 255, 0.08); text-decoration: none; }
+    .btn--primary { border-color: rgba(124, 92, 255, 0.55); background: rgba(124, 92, 255, 0.18); }
+    .btn--ghost { background: rgba(255, 255, 255, 0.02); }
+    .btn--small { padding: 8px 10px; border-radius: 10px; font-size: 12px; }
+
+    .hero__card {
+      border-radius: var(--radius);
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px;
+    }
+    .card-title { font-weight: 800; margin-bottom: 10px; }
+    .checklist { list-style: none; padding: 0; margin: 0 0 10px; display: grid; gap: 10px; }
+    .checklist li { color: var(--muted); font-size: 13px; line-height: 1.4; padding-left: 22px; position: relative; }
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: rgba(34, 211, 238, 0.95);
+      font-weight: 900;
+    }
+
+    .section { padding: 46px 0; }
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; }
+
+    .panel {
+      border-radius: var(--radius);
+      background: var(--card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .panel-title { font-weight: 800; }
+    .panel-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .mermaid-wrap { padding: 14px; background: rgba(0, 0, 0, 0.16); }
+    .mermaid { overflow-x: auto; }
+
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .tile {
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 16px;
+    }
+    .tile-title { font-weight: 800; margin-bottom: 8px; }
+    .tile-body { color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+    .callout {
+      margin-top: 14px;
+      border-radius: var(--radius);
+      background: rgba(124, 92, 255, 0.10);
+      border: 1px solid rgba(124, 92, 255, 0.28);
+      padding: 14px 16px;
+    }
+    .callout-title { font-weight: 800; margin-bottom: 6px; }
+    .callout-body { color: var(--muted); font-size: 13px; line-height: 1.55; }
+    code { font-family: var(--mono); font-size: 12px; padding: 2px 6px; border-radius: 8px; background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border); }
+
+    .steps { margin: 0; padding-left: 20px; color: var(--muted); line-height: 1.65; }
+    .bullets { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.65; }
+
+    .footer {
+      padding: 18px 0 26px;
+      border-top: 1px solid var(--border);
+      background: rgba(11, 16, 32, 0.35);
+    }
+    .footer__inner { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+    @media (max-width: 920px) {
+      .hero__inner { grid-template-columns: 1fr; }
+      .brand { min-width: unset; }
+      .grid { grid-template-columns: 1fr; }
+      .nav { display: none; }
+    }
+
+  app.js: |-
+    (function () {
+      if (typeof mermaid !== "undefined") {
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: "dark",
+          securityLevel: "strict"
+        });
+      }
+
+      const btn = document.getElementById("copyDiagram");
+      const diagram = document.getElementById("diagram");
+      if (btn && diagram) {
+        btn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(diagram.textContent.trim());
+            btn.textContent = "Copied!";
+            setTimeout(() => (btn.textContent = "Copy diagram"), 1200);
+          } catch (e) {
+            btn.textContent = "Copy failed";
+            setTimeout(() => (btn.textContent = "Copy diagram"), 1200);
+          }
+        });
+      }
+    })();
+
