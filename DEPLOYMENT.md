@@ -81,7 +81,24 @@ Expected:
 
 ## Destroy (clean teardown)
 
-### 1) Terraform destroy
+### 1) Remove the Kubernetes app first (recommended)
+
+If you created an ALB via the Ingress, delete the app manifests **before** destroying the cluster,
+so the AWS Load Balancer Controller can clean up the ALB/TargetGroups/SecurityGroups automatically.
+
+From repo root:
+
+```bash
+kubectl delete -f k8s/apps/portfolio-nginx/
+```
+
+Wait until the Ingress is gone (and the ALB `ADDRESS` is empty):
+
+```bash
+kubectl -n portfolio get ingress
+```
+
+### 2) Terraform destroy
 
 ```bash
 cd environments/personal

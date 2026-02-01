@@ -1,9 +1,0 @@
-AWS_AccountID,AWS_Region,AWS_Partition,AWS_Service,AWS_ResourceType,AWS_ResourceID,AWS_ResourceARN,AWS_Tags
-575530852213,us-east-1,aws,ec2,fleet,fleet-5935112e-a104-e634-04b8-8f220a8d352d,arn:aws:ec2:us-east-1:575530852213:fleet/fleet-5935112e-a104-e634-04b8-8f220a8d352d,"[{'Key': 'eks:kubernetes-node-pool-name', 'Value': 'general-purpose'}, {'Key': 'kubernetes.io/cluster/rgtrovao-eks-cluster', 'Value': 'owned'}, {'Key': 'eks:eks-cluster-name', 'Value': 'rgtrovao-eks-cluster'}, {'Key': 'eks:kubernetes-node-class-name', 'Value': 'default'}, {'Key': 'aws:ec2:managed-launch', 'Value': 'eks-auto'}]"
-575530852213,us-east-1,aws,ec2,fleet,fleet-f926388c-d93d-41be-8cb0-8488da1af8ae,arn:aws:ec2:us-east-1:575530852213:fleet/fleet-f926388c-d93d-41be-8cb0-8488da1af8ae,"[{'Key': 'eks:kubernetes-node-pool-name', 'Value': 'general-purpose'}, {'Key': 'kubernetes.io/cluster/rgtrovao-eks-cluster', 'Value': 'owned'}, {'Key': 'eks:eks-cluster-name', 'Value': 'rgtrovao-eks-cluster'}, {'Key': 'eks:kubernetes-node-class-name', 'Value': 'default'}, {'Key': 'aws:ec2:managed-launch', 'Value': 'eks-auto'}]"
-575530852213,us-east-1,aws,events,rule,AutoScalingManagedRule,arn:aws:events:us-east-1:575530852213:rule/AutoScalingManagedRule,[]
-575530852213,us-east-1,aws,events,rule,EKSComputeManagedRule,arn:aws:events:us-east-1:575530852213:rule/EKSComputeManagedRule,[]
-575530852213,,aws,iam,user,rgtrovao,arn:aws:iam::575530852213:user/rgtrovao,
-575530852213,us-east-1,aws,kms,key,f71b01f6-90f7-4c02-9024-04ca3ff3e737,arn:aws:kms:us-east-1:575530852213:key/f71b01f6-90f7-4c02-9024-04ca3ff3e737,"[{'Key': 'Project', 'Value': 'flights'}, {'Key': 'terraform-aws-modules', 'Value': 'eks'}]"
-575530852213,,aws,payments,payment-instrument,5083d05b-253d-41e3-bd65-7e54a3998dba,arn:aws:payments::575530852213:payment-instrument:5083d05b-253d-41e3-bd65-7e54a3998dba,[]
-575530852213,us-east-1,aws,s3,bucket,rgtrovao-terraform-bucket,arn:aws:s3:us-east-1::rgtrovao-terraform-bucket,[]

@@ -67,8 +67,7 @@ O state fica em:
 Entre no ambiente:
 ```bash
 cd environments/personal
-terraform init
-terraform plan
+terraform init -upgrade
 terraform apply
 ```
 
@@ -95,6 +94,11 @@ Este projeto cria uma role IAM que pode ser assumida pelo GitHub Actions (OIDC) 
 - Você precisa definir:
   - `github_org`
   - `github_repo`
+
+Você pode copiar o exemplo e ajustar:
+```bash
+cp environments/personal/terraform.tfvars.example environments/personal/terraform.tfvars
+```
 
 Os outputs importantes após o apply:
 - `ecr.repository_url`

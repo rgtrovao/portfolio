@@ -1,7 +1,16 @@
 **/.terraform/
-**/.terraform.lock.hcl
 **/terraform.tfstate
 **/terraform.tfstate.*
+
+# Keep Terraform provider lockfiles versioned for reproducibility
+# (do NOT ignore .terraform.lock.hcl)
+
+# Ignore local variable files (but allow example templates to be committed)
+**/terraform.tfvars
 **/*.tfvars
 **/*.tfvars.json
+**/*.auto.tfvars
+**/*.auto.tfvars.json
+!**/*.tfvars.example
+!**/*.tfvars.json.example
 .DS_Store

@@ -1,0 +1,18 @@
+################################################################################
+# Example values file (DO NOT commit your real terraform.tfvars)
+#
+# Usage:
+#   cp terraform.tfvars.example terraform.tfvars
+#   # edit terraform.tfvars with your own values
+################################################################################
+
+# GitHub repository allowed to assume the OIDC role for pushing images to ECR
+github_org  = "rgtrovao"
+github_repo = "portfolio"
+
+# Optional: restrict which refs can assume the role
+# github_allowed_refs = ["refs/heads/main"]
+
+# Optional: if your AWS account already has a GitHub OIDC provider, reuse it
+# existing_github_oidc_provider_arn = "arn:aws:iam::<account-id>:oidc-provider/token.actions.githubusercontent.com"
+
