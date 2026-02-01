@@ -111,6 +111,7 @@ Workflow no repo:
 
 Secrets necessários no GitHub:
 - `AWS_ROLE_ARN` = `github_actions_ecr_role_arn`
+- `AWS_CD_ROLE_ARN` = `github_actions_cd_role_arn`
 - `ECR_REPOSITORY_URL` = `ecr_repository_url`
 
 O workflow publica as tags:

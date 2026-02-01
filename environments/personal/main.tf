@@ -56,6 +56,22 @@ module "github_oidc_ecr" {
   ecr_repository_arns = [module.ecr.repository_arn]
 }
 
+module "github_oidc_cd" {
+  source = "../../modules/iam_github_oidc_cd"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  github_org          = var.github_org
+  github_repo         = var.github_repo
+  github_allowed_refs = var.github_allowed_refs
+
+  # Reuse the same GitHub OIDC provider (avoid conflicts).
+  oidc_provider_arn = module.github_oidc_ecr.oidc_provider_arn
+
+  eks_cluster_arn = module.eks.cluster_arn
+}
+
 module "irsa_aws_load_balancer_controller" {
   source = "../../modules/irsa_aws_load_balancer_controller"
 
@@ -67,6 +83,24 @@ module "irsa_aws_load_balancer_controller" {
 
   namespace           = "kube-system"
   serviceaccount_name = "aws-load-balancer-controller"
+}
+
+resource "aws_eks_access_entry" "github_actions_cd" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = module.github_oidc_cd.role_arn
+  type          = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "github_actions_cd_admin" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = module.github_oidc_cd.role_arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+
+  depends_on = [aws_eks_access_entry.github_actions_cd]
 }
 
 resource "helm_release" "aws_load_balancer_controller" {
@@ -97,6 +131,7 @@ resource "helm_release" "aws_load_balancer_controller" {
 
   depends_on = [
     module.irsa_aws_load_balancer_controller,
+    aws_eks_access_policy_association.github_actions_cd_admin,
   ]
 }
 

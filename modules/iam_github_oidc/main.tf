@@ -47,9 +47,9 @@ resource "aws_iam_role" "this" {
 
 data "aws_iam_policy_document" "ecr_push" {
   statement {
-    sid     = "EcrAuthToken"
-    effect  = "Allow"
-    actions = ["ecr:GetAuthorizationToken"]
+    sid       = "EcrAuthToken"
+    effect    = "Allow"
+    actions   = ["ecr:GetAuthorizationToken"]
     resources = ["*"]
   }
 

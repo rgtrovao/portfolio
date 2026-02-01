@@ -33,11 +33,20 @@ This repo includes a GitHub Actions workflow:
 
 Configure these GitHub Secrets:
 - `AWS_ROLE_ARN` (Terraform output: `github_actions_ecr_role_arn`)
+- `AWS_CD_ROLE_ARN` (Terraform output: `github_actions_cd_role_arn`)
 - `ECR_REPOSITORY_URL` (Terraform output: `ecr_repository_url`)
 
 Each push to `main` publishes two tags to ECR:
 - `:latest` (used by the Kubernetes Deployment)
 - `:${{ github.sha }}` (versioned history for rollback)
+
+## CD (deploy to EKS)
+
+The same workflow includes a `deploy` job that:
+- configures kubectl for the cluster
+- runs `kubectl -n portfolio rollout restart deploy/portfolio-nginx`
+
+This keeps the deploy flow simple while still being fully automated.
 
 ### 2) Configure kubectl
 

@@ -34,3 +34,25 @@ jobs:
           docker push ${ECR_REPOSITORY_URL}:${IMAGE_SHA_TAG}
           docker push ${ECR_REPOSITORY_URL}:latest
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.AWS_CD_ROLE_ARN }}
+
+      - uses: azure/setup-kubectl@v4
+
+      - name: Configure kubectl (EKS)
+        run: |
+          aws eks update-kubeconfig --region us-east-1 --name projeto-eks-personal
+
+      - name: Restart deployment to pull latest image
+        run: |
+          kubectl -n portfolio rollout restart deploy/portfolio-nginx
+          kubectl -n portfolio rollout status deploy/portfolio-nginx --timeout=5m
+

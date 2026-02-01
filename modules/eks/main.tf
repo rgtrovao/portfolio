@@ -29,9 +29,14 @@ resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
 }
 
 resource "aws_eks_cluster" "this" {
-  name    = var.cluster_name
+  name     = var.cluster_name
   role_arn = aws_iam_role.eks_cluster.arn
-  version = var.kubernetes_version
+  version  = var.kubernetes_version
+
+  access_config {
+    authentication_mode                         = var.cluster_authentication_mode
+    bootstrap_cluster_creator_admin_permissions = true
+  }
 
   vpc_config {
     subnet_ids              = var.subnet_ids

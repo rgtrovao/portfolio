@@ -92,6 +92,11 @@ output "github_actions_ecr_role_arn" {
   value       = module.github_oidc_ecr.role_arn
 }
 
+output "github_actions_cd_role_arn" {
+  description = "ARN da role do GitHub Actions para CD (deploy no EKS)."
+  value       = module.github_oidc_cd.role_arn
+}
+
 output "aws_load_balancer_controller_irsa_role_arn" {
   description = "ARN da role IRSA do AWS Load Balancer Controller."
   value       = module.irsa_aws_load_balancer_controller.iam_role_arn

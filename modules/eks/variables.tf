@@ -47,6 +47,12 @@ variable "cluster_endpoint_private_access" {
   default     = true
 }
 
+variable "cluster_authentication_mode" {
+  description = "Modo de autenticação do cluster EKS (necessário para EKS Access Entries). Use API_AND_CONFIG_MAP para compatibilidade."
+  type        = string
+  default     = "API_AND_CONFIG_MAP"
+}
+
 variable "node_instance_types" {
   description = "Tipos de instância do node group."
   type        = list(string)
