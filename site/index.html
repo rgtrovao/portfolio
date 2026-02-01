@@ -158,6 +158,58 @@
                   </marker>
                 </defs>
 
+                <style>
+                  /* Self-contained SVG styling (avoid relying on page CSS). */
+                  .diagram-box {
+                    fill: #ffffff;
+                    fill-opacity: 0.08;
+                    stroke: #ffffff;
+                    stroke-opacity: 0.22;
+                    stroke-width: 1.2;
+                  }
+                  .diagram-frame {
+                    fill: #ffffff;
+                    fill-opacity: 0.04;
+                    stroke: #ffffff;
+                    stroke-opacity: 0.18;
+                    stroke-width: 1.2;
+                  }
+                  .diagram-title {
+                    fill: #ffffff;
+                    fill-opacity: 0.92;
+                    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+                    font-size: 16px;
+                    font-weight: 700;
+                    letter-spacing: -0.01em;
+                  }
+                  .diagram-text {
+                    fill: #ffffff;
+                    fill-opacity: 0.82;
+                    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                  }
+                  .diagram-subtle {
+                    fill: #ffffff;
+                    fill-opacity: 0.74;
+                    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+                    font-size: 13px;
+                    font-weight: 500;
+                  }
+                  .diagram-line {
+                    stroke: #7c5cff;
+                    stroke-opacity: 0.75;
+                    stroke-width: 2;
+                  }
+                  .diagram-arrowhead {
+                    fill: #7c5cff;
+                    fill-opacity: 0.95;
+                  }
+                  .dashed {
+                    stroke-dasharray: 6 6;
+                  }
+                </style>
+
                 <rect x="30" y="50" width="260" height="150" rx="18" class="diagram-box" />
                 <text x="60" y="88" class="diagram-title">CI/CD</text>
                 <text x="60" y="118" class="diagram-text">GitHub Actions</text>
