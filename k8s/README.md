@@ -1,7 +1,7 @@
 # Kubernetes manifests (portfolio on EKS)
 
 This folder contains the Kubernetes manifests and installation notes to publish a personal portfolio website on your EKS cluster using:
-- `nginx:stable` (2 replicas)
+- a custom nginx image built from this repo (2 replicas)
 - AWS Load Balancer Controller (ALB Ingress) with HTTP -> HTTPS redirect
 - ACM certificate: `arn:aws:acm:us-east-1:575530852213:certificate/66c26371-4863-4b7d-b29d-ed16ea02a28d`
 - Host: `www.truecloud.com.br`

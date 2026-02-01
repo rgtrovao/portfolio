@@ -26,6 +26,19 @@ Notes:
 - `-upgrade` keeps `.terraform.lock.hcl` consistent when providers are added/updated.
 - The Terraform backend is S3: `rgtrovao-terraform-bucket` (no DynamoDB locking by design).
 
+## CI (build & push to ECR)
+
+This repo includes a GitHub Actions workflow:
+- `.github/workflows/build-and-push.yml`
+
+Configure these GitHub Secrets:
+- `AWS_ROLE_ARN` (Terraform output: `github_actions_ecr_role_arn`)
+- `ECR_REPOSITORY_URL` (Terraform output: `ecr_repository_url`)
+
+Each push to `main` publishes two tags to ECR:
+- `:latest` (used by the Kubernetes Deployment)
+- `:${{ github.sha }}` (versioned history for rollback)
+
 ### 2) Configure kubectl
 
 ```bash
@@ -53,6 +66,13 @@ Validate:
 kubectl -n portfolio get pods -o wide
 kubectl -n portfolio get endpoints portfolio-nginx
 kubectl -n portfolio get ingress
+```
+
+### 5) Pull the newest image after CI runs
+The Deployment uses the `:latest` tag. After a new push, restart the pods:
+
+```bash
+kubectl -n portfolio rollout restart deploy/portfolio-nginx
 ```
 
 ### 5) DNS (manual)

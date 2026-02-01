@@ -106,6 +106,17 @@ Os outputs importantes após o apply:
  - `ecr_repository_url` (output direto)
  - `github_actions_ecr_role_arn` (output direto)
 
+Workflow no repo:
+- `.github/workflows/build-and-push.yml`
+
+Secrets necessários no GitHub:
+- `AWS_ROLE_ARN` = `github_actions_ecr_role_arn`
+- `ECR_REPOSITORY_URL` = `ecr_repository_url`
+
+O workflow publica as tags:
+- `:latest` (usada no Deployment por padrão)
+- `:${{ github.sha }}` (histórico/rollback)
+
 Exemplo de workflow (simplificado):
 ```yaml
 name: build-and-push
@@ -130,7 +141,9 @@ jobs:
         run: |
           docker build -t app:${{ github.sha }} .
           docker tag app:${{ github.sha }} $ECR_REPOSITORY_URL:${{ github.sha }}
+          docker tag app:${{ github.sha }} $ECR_REPOSITORY_URL:latest
           docker push $ECR_REPOSITORY_URL:${{ github.sha }}
+          docker push $ECR_REPOSITORY_URL:latest
 ```
 
 ## Segurança (recomendado)

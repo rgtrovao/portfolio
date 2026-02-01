@@ -1,0 +1,36 @@
+name: build-and-push
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+
+      - uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push (sha + latest)
+        env:
+          ECR_REPOSITORY_URL: ${{ secrets.ECR_REPOSITORY_URL }}
+          IMAGE_SHA_TAG: ${{ github.sha }}
+        run: |
+          docker build -t app:${IMAGE_SHA_TAG} .
+
+          docker tag app:${IMAGE_SHA_TAG} ${ECR_REPOSITORY_URL}:${IMAGE_SHA_TAG}
+          docker tag app:${IMAGE_SHA_TAG} ${ECR_REPOSITORY_URL}:latest
+
+          docker push ${ECR_REPOSITORY_URL}:${IMAGE_SHA_TAG}
+          docker push ${ECR_REPOSITORY_URL}:latest
+
