@@ -140,8 +140,33 @@ h2 { margin: 0 0 14px; font-size: 28px; letter-spacing: -0.01em; }
 }
 .panel-title { font-weight: 800; }
 .panel-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.diagram-wrap { padding: 14px; background: rgba(0, 0, 0, 0.16); }
-.diagram { width: 100%; height: auto; display: block; overflow: hidden; }
+.diagram-wrap {
+  padding: 14px;
+  background: rgba(0, 0, 0, 0.16);
+  overflow-x: auto;
+}
+.diagram-figure { margin: 0; }
+.diagram-img {
+  display: block;
+  height: auto;
+  min-width: 1100px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.35);
+}
+.diagram-caption {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+.diagram-link {
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+}
+.diagram-link:hover { color: var(--text); text-decoration: underline; }
 .panel-footer { padding: 12px 14px 14px; border-top: 1px solid var(--border); background: rgba(255, 255, 255, 0.02); }
 
 .copy-block {
@@ -161,15 +186,6 @@ h2 { margin: 0 0 14px; font-size: 28px; letter-spacing: -0.01em; }
   border: 0;
   background: transparent;
 }
-
-.diagram-box { fill: rgba(255, 255, 255, 0.04); stroke: rgba(255, 255, 255, 0.14); stroke-width: 1.2; }
-.diagram-frame { fill: rgba(255, 255, 255, 0.02); stroke: rgba(255, 255, 255, 0.12); stroke-width: 1.2; }
-.diagram-title { fill: rgba(255, 255, 255, 0.90); font: 700 16px var(--sans); letter-spacing: -0.01em; }
-.diagram-text { fill: rgba(255, 255, 255, 0.70); font: 500 14px var(--sans); }
-.diagram-subtle { fill: rgba(255, 255, 255, 0.60); font: 500 13px var(--sans); }
-.diagram-line { stroke: rgba(124, 92, 255, 0.55); stroke-width: 2; }
-.diagram-arrowhead { fill: rgba(124, 92, 255, 0.75); }
-.diagram-box.dashed { stroke-dasharray: 6 6; }
 
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .tile {
@@ -208,5 +224,6 @@ code { font-family: var(--mono); font-size: 12px; padding: 2px 6px; border-radiu
   .grid { grid-template-columns: 1fr; }
   .nav { display: none; }
   .nav-cta { display: none; }
+  .diagram-img { min-width: 980px; }
 }
 

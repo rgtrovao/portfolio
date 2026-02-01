@@ -151,113 +151,17 @@
             </div>
 
             <div class="diagram-wrap" role="img" aria-label="Architecture diagram">
-              <svg viewBox="0 0 1200 520" class="diagram" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-                    <path d="M0,0 L10,3 L0,6 Z" class="diagram-arrowhead" />
-                  </marker>
-                </defs>
-
-                <style>
-                  /* Self-contained SVG styling (avoid relying on page CSS). */
-                  .diagram-box {
-                    fill: #ffffff;
-                    fill-opacity: 0.08;
-                    stroke: #ffffff;
-                    stroke-opacity: 0.22;
-                    stroke-width: 1.2;
-                  }
-                  .diagram-frame {
-                    fill: #ffffff;
-                    fill-opacity: 0.04;
-                    stroke: #ffffff;
-                    stroke-opacity: 0.18;
-                    stroke-width: 1.2;
-                  }
-                  .diagram-title {
-                    fill: #ffffff;
-                    fill-opacity: 0.92;
-                    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-                    font-size: 16px;
-                    font-weight: 700;
-                    letter-spacing: -0.01em;
-                  }
-                  .diagram-text {
-                    fill: #ffffff;
-                    fill-opacity: 0.82;
-                    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-                    font-size: 14px;
-                    font-weight: 500;
-                  }
-                  .diagram-subtle {
-                    fill: #ffffff;
-                    fill-opacity: 0.74;
-                    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-                    font-size: 13px;
-                    font-weight: 500;
-                  }
-                  .diagram-line {
-                    stroke: #7c5cff;
-                    stroke-opacity: 0.75;
-                    stroke-width: 2;
-                  }
-                  .diagram-arrowhead {
-                    fill: #7c5cff;
-                    fill-opacity: 0.95;
-                  }
-                  .dashed {
-                    stroke-dasharray: 6 6;
-                  }
-                </style>
-
-                <rect x="30" y="50" width="260" height="150" rx="18" class="diagram-box" />
-                <text x="60" y="88" class="diagram-title">CI/CD</text>
-                <text x="60" y="118" class="diagram-text">GitHub Actions</text>
-                <text x="60" y="144" class="diagram-text">OIDC → AssumeRole</text>
-                <text x="60" y="170" class="diagram-text">Build & push image</text>
-
-                <rect x="330" y="80" width="230" height="120" rx="18" class="diagram-box" />
-                <text x="360" y="118" class="diagram-title">IAM</text>
-                <text x="360" y="148" class="diagram-text">Dedicated role</text>
-                <text x="360" y="174" class="diagram-text">(no static keys)</text>
-
-                <rect x="610" y="80" width="250" height="120" rx="18" class="diagram-box" />
-                <text x="640" y="118" class="diagram-title">ECR</text>
-                <text x="640" y="148" class="diagram-text">Repo: projeto-eks/app</text>
-                <text x="640" y="174" class="diagram-text">Tags: latest + sha</text>
-
-                <line x1="290" y1="125" x2="330" y2="125" class="diagram-line" marker-end="url(#arrow)" />
-                <line x1="560" y1="140" x2="610" y2="140" class="diagram-line" marker-end="url(#arrow)" />
-
-                <rect x="30" y="240" width="1135" height="250" rx="22" class="diagram-frame" />
-                <text x="60" y="275" class="diagram-title">AWS VPC</text>
-                <text x="60" y="300" class="diagram-subtle">2 AZs • Public + Private + Isolated DB • Single NAT Gateway</text>
-
-                <rect x="70" y="325" width="310" height="135" rx="18" class="diagram-box" />
-                <text x="95" y="362" class="diagram-title">Public subnets</text>
-                <text x="95" y="392" class="diagram-text">ALB (Ingress)</text>
-                <text x="95" y="418" class="diagram-text">IGW route</text>
-
-                <rect x="420" y="325" width="380" height="135" rx="18" class="diagram-box" />
-                <text x="445" y="362" class="diagram-title">Private subnets</text>
-                <text x="445" y="392" class="diagram-text">EKS nodes (2× t3.small, SPOT)</text>
-                <text x="445" y="418" class="diagram-text">Workloads (2 nginx pods)</text>
-
-                <rect x="840" y="325" width="285" height="135" rx="18" class="diagram-box dashed" />
-                <text x="865" y="362" class="diagram-title">DB subnets (isolated)</text>
-                <text x="865" y="392" class="diagram-text">No internet route</text>
-                <text x="865" y="418" class="diagram-text">Reserved for data</text>
-
-                <rect x="910" y="40" width="255" height="170" rx="18" class="diagram-box" />
-                <text x="940" y="78" class="diagram-title">Web entrypoint</text>
-                <text x="940" y="108" class="diagram-text">Route53: www.truecloud.com.br</text>
-                <text x="940" y="134" class="diagram-text">ACM certificate (TLS)</text>
-                <text x="940" y="160" class="diagram-text">HTTP → HTTPS redirect</text>
-
-                <line x1="860" y1="140" x2="910" y2="140" class="diagram-line" marker-end="url(#arrow)" />
-                <line x1="1040" y1="210" x2="225" y2="325" class="diagram-line" marker-end="url(#arrow)" />
-                <line x1="735" y1="200" x2="610" y2="325" class="diagram-line" marker-end="url(#arrow)" />
-              </svg>
+              <figure class="diagram-figure">
+                <img
+                  class="diagram-img"
+                  src="diagrams/aws_cicd_architecture.svg"
+                  alt="AWS CI/CD Architecture - Deploy and Traffic Flow"
+                  loading="lazy"
+                />
+                <figcaption class="diagram-caption">
+                  <a class="diagram-link" href="diagrams/aws_cicd_architecture.svg" target="_blank" rel="noreferrer">Open full size</a>
+                </figcaption>
+              </figure>
             </div>
 
             <div class="panel-footer">
