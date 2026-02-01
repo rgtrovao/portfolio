@@ -112,6 +112,12 @@ variable "ecr_repository_name" {
   default     = "projeto-eks/app"
 }
 
+variable "ecr_lifecycle_max_image_count" {
+  description = "Quantidade máxima de imagens para manter no repositório ECR (lifecycle policy)."
+  type        = number
+  default     = 200
+}
+
 variable "github_org" {
   description = "Org/owner do repositório no GitHub (para OIDC)."
   type        = string

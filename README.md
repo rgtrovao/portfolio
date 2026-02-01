@@ -14,7 +14,7 @@ Projeto pessoal em Terraform para provisionar na AWS (`us-east-1`) uma **VPC** c
   - 1× cluster EKS (Kubernetes `1.33`)
   - 1× managed node group: `SPOT`, `t3.small`, 2 nós
 - **ECR + IAM**
-  - 1× repositório ECR
+  - 1× repositório ECR (criado manualmente no Console para preservar histórico de imagens)
   - 1× role IAM para GitHub Actions (OIDC) fazer push no ECR
   - AWS Load Balancer Controller instalado automaticamente no cluster (Helm via Terraform)
 

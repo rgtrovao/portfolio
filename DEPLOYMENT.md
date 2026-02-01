@@ -11,10 +11,18 @@ This repo is designed for a simple workflow:
 - Terraform `>= 1.5`
 - `kubectl`
 - (Optional) `helm` (not required for normal provisioning; Terraform installs the chart)
+- ECR repository **must exist** in advance: `projeto-eks/app` (created manually in AWS Console to preserve image history)
 
 ## Provision (from scratch)
 
-### 1) Terraform apply
+### 1) Ensure ECR repository exists (manual, one-time)
+
+Create the ECR repository in `us-east-1`:
+- Name: `projeto-eks/app`
+
+This repo is intentionally created outside Terraform so it is **not deleted** on `terraform destroy` and keeps your image history.
+
+### 2) Terraform apply
 
 ```bash
 cd environments/personal
@@ -48,20 +56,20 @@ The same workflow includes a `deploy` job that:
 
 This keeps the deploy flow simple while still being fully automated.
 
-### 2) Configure kubectl
+### 3) Configure kubectl
 
 ```bash
 aws eks update-kubeconfig --region us-east-1 --name projeto-eks-personal
 ```
 
-### 3) Validate AWS Load Balancer Controller (installed by Terraform)
+### 4) Validate AWS Load Balancer Controller (installed by Terraform)
 
 ```bash
 kubectl -n kube-system get deploy aws-load-balancer-controller
 kubectl -n kube-system get pods -l app.kubernetes.io/name=aws-load-balancer-controller -o wide
 ```
 
-### 4) Deploy the portfolio app (single command)
+### 5) Deploy the portfolio app (single command)
 
 From repo root:
 
@@ -77,14 +85,14 @@ kubectl -n portfolio get endpoints portfolio-nginx
 kubectl -n portfolio get ingress
 ```
 
-### 5) Pull the newest image after CI runs
+### 6) Pull the newest image after CI runs
 The Deployment uses the `:latest` tag. After a new push, restart the pods:
 
 ```bash
 kubectl -n portfolio rollout restart deploy/portfolio-nginx
 ```
 
-### 6) DNS (manual)
+### 7) DNS (manual)
 
 After the Ingress is reconciled, it will show an ALB DNS name in the `ADDRESS` column:
 
@@ -97,7 +105,7 @@ Create/update the Route53 record:
 - Record: `www.truecloud.com.br`
 - Target: the ALB DNS name from the Ingress
 
-### 7) Smoke tests
+### 8) Smoke tests
 
 ```bash
 curl -I http://www.truecloud.com.br

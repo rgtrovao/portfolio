@@ -39,6 +39,10 @@ module "ecr" {
   environment  = var.environment
 
   repository_name = var.ecr_repository_name
+
+  # The repository itself is created manually (Console) to preserve image history.
+  # Terraform still manages lifecycle policy to control retention/cost.
+  lifecycle_max_image_count = var.ecr_lifecycle_max_image_count
 }
 
 module "github_oidc_ecr" {
