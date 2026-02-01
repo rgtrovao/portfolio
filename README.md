@@ -43,7 +43,7 @@ flowchart LR
   EKS --- PublicB
   EKS --- PrivateA
   EKS --- PrivateB
-  NodeGroup[ManagedNodeGroup_SPOT_t3micro_x3] --- PrivateA
+  NodeGroup[ManagedNodeGroup_SPOT_t3small_x2] --- PrivateA
   NodeGroup --- PrivateB
 ```
 

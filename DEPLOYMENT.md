@@ -84,7 +84,7 @@ The Deployment uses the `:latest` tag. After a new push, restart the pods:
 kubectl -n portfolio rollout restart deploy/portfolio-nginx
 ```
 
-### 5) DNS (manual)
+### 6) DNS (manual)
 
 After the Ingress is reconciled, it will show an ALB DNS name in the `ADDRESS` column:
 
@@ -97,7 +97,7 @@ Create/update the Route53 record:
 - Record: `www.truecloud.com.br`
 - Target: the ALB DNS name from the Ingress
 
-### 6) Smoke tests
+### 7) Smoke tests
 
 ```bash
 curl -I http://www.truecloud.com.br
@@ -138,7 +138,7 @@ terraform destroy
 Why this works:
 - The Helm release (AWS Load Balancer Controller) is managed by Terraform, so it is destroyed as part of `terraform destroy`.
 
-### 2) Optional post-checks
+### 3) Optional post-checks
 
 If you want to double-check nothing is left behind:
 - In AWS console, search for leftover resources with prefixes like `k8s-` (ALB/TargetGroups/SecurityGroups).

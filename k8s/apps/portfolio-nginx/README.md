@@ -67,7 +67,7 @@ The Deployment uses the `:latest` tag. After a new push, restart the pods to pul
 kubectl -n portfolio rollout restart deploy/portfolio-nginx
 ```
 
-### 4) Create Route53 record (manual)
+### 5) Create Route53 record (manual)
 When the Ingress is ready, it will show an ALB DNS name in `ADDRESS`.
 
 Create a DNS record pointing `www.truecloud.com.br` to the ALB DNS name:
@@ -75,7 +75,7 @@ Create a DNS record pointing `www.truecloud.com.br` to the ALB DNS name:
 - Record: `www.truecloud.com.br`
 - Target: ALB DNS
 
-### 5) Test HTTP -> HTTPS redirect
+### 6) Test HTTP -> HTTPS redirect
 ```bash
 curl -I http://www.truecloud.com.br
 curl -I https://www.truecloud.com.br

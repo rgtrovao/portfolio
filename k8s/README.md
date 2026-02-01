@@ -8,7 +8,7 @@ This folder contains the Kubernetes manifests and installation notes to publish 
 
 ## Structure
 - `controllers/aws-load-balancer-controller/`: IRSA IAM policy (Terraform) + controller notes
-- `apps/portfolio-nginx/`: namespace + configmap (site) + deployment + service + ingress
+- `apps/portfolio-nginx/`: namespace + deployment + service + ingress
 
 ## Deploy (high level)
 1. Apply Terraform infra (VPC/EKS/ECR).
