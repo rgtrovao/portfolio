@@ -40,7 +40,7 @@
             <div class="pill-row">
               <span class="pill">Region: us-east-1</span>
               <span class="pill">Kubernetes: 1.33</span>
-              <span class="pill">Nodes: 3 (t3.micro • SPOT)</span>
+              <span class="pill">Nodes: 2 (t3.small • SPOT)</span>
               <span class="pill">Pods: 2</span>
               <span class="pill">Host: www.truecloud.com.br</span>
             </div>
@@ -55,7 +55,7 @@
             <ul class="checklist">
               <li>VPC with 6 subnets (2 public, 2 private, 2 db)</li>
               <li>IGW + public routing, 1 NAT Gateway for private egress</li>
-              <li>EKS 1.33 + managed node group (3× t3.micro, SPOT)</li>
+              <li>EKS 1.33 + managed node group (2× t3.small, SPOT)</li>
               <li>ECR repo for app images + lifecycle policy</li>
               <li>GitHub Actions OIDC role for ECR push</li>
               <li>AWS Load Balancer Controller installed by Terraform (Helm + IRSA)</li>
@@ -99,7 +99,7 @@ flowchart LR
     IAMRole -->|"push"| ECR["ECR Repo projeto-eks/app"]
   end
 
-  ECR -->|"pull"| Nodes["EKS Nodes (3× t3.micro)"]
+  ECR -->|"pull"| Nodes["EKS Nodes (2× t3.small)"]
   Nodes --> Pod1
   Nodes --> Pod2
 
@@ -149,7 +149,7 @@ flowchart LR
             <div class="tile">
               <div class="tile-title">EKS</div>
               <div class="tile-body">
-                Kubernetes 1.33, managed node group (3 nodes, t3.micro • SPOT), workloads scheduled on private subnets.
+                Kubernetes 1.33, managed node group (2 nodes, t3.small • SPOT), workloads scheduled on private subnets.
               </div>
             </div>
             <div class="tile">

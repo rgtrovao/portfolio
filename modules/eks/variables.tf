@@ -56,7 +56,7 @@ variable "cluster_authentication_mode" {
 variable "node_instance_types" {
   description = "Tipos de instância do node group."
   type        = list(string)
-  default     = ["t3.micro"]
+  default     = ["t3.small"]
 }
 
 variable "node_capacity_type" {
@@ -68,19 +68,19 @@ variable "node_capacity_type" {
 variable "node_desired_size" {
   description = "Tamanho desejado do node group."
   type        = number
-  default     = 3
+  default     = 2
 }
 
 variable "node_min_size" {
   description = "Tamanho mínimo do node group."
   type        = number
-  default     = 3
+  default     = 2
 }
 
 variable "node_max_size" {
   description = "Tamanho máximo do node group."
   type        = number
-  default     = 3
+  default     = 2
 }
 
 variable "tags" {

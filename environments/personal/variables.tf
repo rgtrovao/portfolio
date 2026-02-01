@@ -67,7 +67,7 @@ variable "cluster_endpoint_public_access_cidrs" {
 variable "node_instance_types" {
   description = "Tipos de instância do node group."
   type        = list(string)
-  default     = ["t3.micro"]
+  default     = ["t3.small"]
 }
 
 variable "node_capacity_type" {
@@ -79,19 +79,19 @@ variable "node_capacity_type" {
 variable "node_desired_size" {
   description = "Tamanho desejado do node group."
   type        = number
-  default     = 3
+  default     = 2
 }
 
 variable "node_min_size" {
   description = "Tamanho mínimo do node group."
   type        = number
-  default     = 3
+  default     = 2
 }
 
 variable "node_max_size" {
   description = "Tamanho máximo do node group."
   type        = number
-  default     = 3
+  default     = 2
 }
 
 variable "aws_load_balancer_controller_chart_version" {

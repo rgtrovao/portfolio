@@ -12,7 +12,7 @@ Projeto pessoal em Terraform para provisionar na AWS (`us-east-1`) uma **VPC** c
   - 1× NAT Gateway (único) + route table privada com rota `0.0.0.0/0 -> NAT`
 - **EKS**
   - 1× cluster EKS (Kubernetes `1.33`)
-  - 1× managed node group: `SPOT`, `t3.micro`, 3 nós
+  - 1× managed node group: `SPOT`, `t3.small`, 2 nós
 - **ECR + IAM**
   - 1× repositório ECR
   - 1× role IAM para GitHub Actions (OIDC) fazer push no ECR

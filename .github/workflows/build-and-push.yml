@@ -3,6 +3,11 @@ name: build-and-push
 on:
   push:
     branches: ["main"]
+    paths:
+      - "k8s/**"
+      - "site/**"
+      - "Dockerfile"
+      - ".github/workflows/build-and-push.yml"
 
 permissions:
   id-token: write
